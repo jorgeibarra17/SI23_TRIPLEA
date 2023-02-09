@@ -23,7 +23,7 @@ git clone [http link]
 5. Agrega el repositorio original como upstream
 
 ```
-git remote add upstream https://github.com/JessicaBorjaCetys/SI23.git
+git remote set-url upstream https://github.com/JessicaBorja/SI23.git
 ```
 
 ## Actualizar tu repositorio
@@ -53,6 +53,6 @@ Los siguientes comandos:
 
 ```
 git fetch upstream
-git rebase upstream/main
+git rebase upstream/master
 git push
 ```
