@@ -14,12 +14,11 @@ class Network(nn.Module):
         # TODO: Calcular dimension de salida
         out_dim = self.calc_out_dim(input_dim, kernel_size=3)
         # TODO: Define las capas de tu red
-        self.conv1 = nn.Conv2d(3,32,kernel_size=5)
-        self.conv2 = nn.Conv2d(32,64,kernel_size=5)
+        self.conv1 = nn.Conv2d(1,48,kernel_size=3)
+        self.conv2 = nn.Conv2d(48,64,kernel_size=5)
         self.max_pool1 = nn.MaxPool2d(2)
-
         self.fc1 = nn.Linear(out_dim*out_dim*64,512)
-        self.fc2 = nn.Linear(512,6)
+        self.fc2 = nn.Linear(512,n_classes)
         self.to(self.device)
  
     def calc_out_dim(self, in_dim, kernel_size, stride=1, padding=0):
