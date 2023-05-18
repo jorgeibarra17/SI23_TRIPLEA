@@ -14,11 +14,11 @@ class Network(nn.Module):
         # TODO: Calcular dimension de salida
         out_dim = self.calc_out_dim(input_dim, kernel_size=3)
         # TODO: Define las capas de tu red
-        self.conv1 = nn.Conv2d(1,48,kernel_size=3)
-        self.conv2 = nn.Conv2d(48,64,kernel_size=5)
+        self.conv1 = nn.Conv2d(1,input_dim,kernel_size=5)
+        self.conv2 = nn.Conv2d(input_dim,64,kernel_size=5)
         self.max_pool1 = nn.MaxPool2d(2)
-        self.fc1 = nn.Linear(out_dim*out_dim*64,512)
-        self.fc2 = nn.Linear(512,n_classes)
+        self.fc1 = nn.Linear(25600,out_dim)
+        self.fc2 = nn.Linear(out_dim,n_classes)
         self.to(self.device)
  
     def calc_out_dim(self, in_dim, kernel_size, stride=1, padding=0):
@@ -39,7 +39,7 @@ class Network(nn.Module):
         features = F.relu(features)
         logits = self.fc2(features)
         proba = F.softmax(logits,dim = -1)
-        return logits, proba
+        return logits
 
     def predict(self, x):
         with torch.inference_mode():
@@ -63,3 +63,5 @@ class Network(nn.Module):
             - path (str): path relativo donde se guardó el modelo
         '''
         # TODO: Carga los pesos de tu red neuronal
+        torch.load(model_name)
+        
