@@ -4,7 +4,7 @@ import os
 import cv2
 from network import Network
 import torch
-from utils import to_numpy, get_transforms, add_img_text
+from utils import to_numpy, get_transforms, add_img_text,to_torch
 from dataset import EMOTIONS_MAP
 import pathlib
 
@@ -32,9 +32,10 @@ def predict(img_title_paths):
         # np.ndarray, torch.Tensor
         im_file = (file_path / path).as_posix()
         original, transformed, denormalized = load_img(im_file)
-
+        
+        transformed = transformed.cuda()
         # Inferencia
-        # TODO: Para la imagen de entrada, utiliza tu modelo para predecir la clase mas probale
+        # TODO: Para la imagen de entrada, utiliza tu modelo para predecir la clase mas probable
         pred_label = modelo.predict(transformed)
 
         # Original / transformada

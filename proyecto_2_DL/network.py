@@ -17,7 +17,7 @@ class Network(nn.Module):
         self.conv1 = nn.Conv2d(1,input_dim,kernel_size=5)
         self.conv2 = nn.Conv2d(input_dim,64,kernel_size=5)
         self.max_pool1 = nn.MaxPool2d(2)
-        self.fc1 = nn.Linear(25600,out_dim)
+        self.fc1 = nn.Linear(256000,out_dim)
         self.fc2 = nn.Linear(out_dim,n_classes)
         self.to(self.device)
  
@@ -41,7 +41,7 @@ class Network(nn.Module):
         proba = F.softmax(logits,dim = -1)
         return logits
 
-    def predict(self, x):
+    def predict(self, x: torch.Tensor) -> torch.Tensor:
         with torch.inference_mode():
             return self.forward(x)
 
