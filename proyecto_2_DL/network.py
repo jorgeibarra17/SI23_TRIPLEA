@@ -14,17 +14,20 @@ class Network(nn.Module):
         # TODO: Calcular dimension de salida
         out_dim = self.calc_out_dim(input_dim, kernel_size=3)
         # TODO: Define las capas de tu red
-        self.conv1 = nn.Conv2d(1,input_dim,kernel_size=5)
-        self.conv2 = nn.Conv2d(input_dim,64,kernel_size=5)
-        self.max_pool1 = nn.MaxPool2d(2)
-        self.fc1 = nn.Linear(256000,out_dim)
-        self.fc2 = nn.Linear(out_dim,n_classes)
+        self.conv1 = nn.Conv2d(1,50,kernel_size=3)
+        self.conv2 = nn.Conv2d(50,200,kernel_size=5)
+        self.conv3 = nn.Conv2d(200, 175, kernel_size=3)
+        self.conv4 = nn.Conv2d(175, 150, kernel_size=5)
+        self.max_pool1 = nn.MaxPool2d(kernel_size=2)
+        self.fc1 = nn.Linear(out_dim*out_dim*150,150)
+        self.fc2 = nn.Linear(150,out_dim)
+        self.fc3 = nn.Linear(out_dim, n_classes)
         self.to(self.device)
  
     def calc_out_dim(self, in_dim, kernel_size, stride=1, padding=0):
-        out_dim = math.floor((in_dim + 2*padding - (kernel_size - 1) - 1/stride))
+        out_dim = (in_dim + 2*padding - (kernel_size - 1) - 1/stride)
         out_dim+=1
-        return out_dim
+        return math.floor(out_dim)
 
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         # TODO: Define la propagacion hacia adelante de tu red
@@ -32,12 +35,18 @@ class Network(nn.Module):
         feature_map = F.relu(feature_map)
         feature_map = self.conv2(feature_map)
         feature_map = F.relu(feature_map)
+        feature_map = self.conv3(feature_map)
+        feature_map = F.relu(feature_map)
+        feature_map = self.conv4(feature_map)
+        feature_map = F.relu(feature_map)
         feature_map = self.max_pool1(feature_map)
 
         features = torch.flatten(feature_map,start_dim=1)
         features = self.fc1(features)
         features = F.relu(features)
-        logits = self.fc2(features)
+        features = self.fc2(features)
+        features = F.relu(features)
+        logits = self.fc3(features)
         proba = F.softmax(logits,dim = -1)
         return logits
 

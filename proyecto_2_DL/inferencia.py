@@ -4,7 +4,7 @@ import os
 import cv2
 from network import Network
 import torch
-from utils import to_numpy, get_transforms, add_img_text,to_torch
+from utils import to_numpy, get_transforms, add_img_text
 from dataset import EMOTIONS_MAP
 import pathlib
 
@@ -36,7 +36,8 @@ def predict(img_title_paths):
         transformed = transformed.cuda()
         # Inferencia
         # TODO: Para la imagen de entrada, utiliza tu modelo para predecir la clase mas probable
-        pred_label = modelo.predict(transformed)
+        pred_label = modelo(transformed)
+        pred_label = torch.argmax(pred_label, dim=7)
 
         # Original / transformada
         # pred_label (str): nombre de la clase predicha
