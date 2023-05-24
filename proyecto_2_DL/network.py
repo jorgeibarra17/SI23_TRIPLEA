@@ -14,14 +14,14 @@ class Network(nn.Module):
         # TODO: Calcular dimension de salida
         out_dim = self.calc_out_dim(input_dim, kernel_size=3)
         # TODO: Define las capas de tu red
-        self.conv1 = nn.Conv2d(1,50,kernel_size=3)
-        self.conv2 = nn.Conv2d(50,200,kernel_size=5)
-        self.conv3 = nn.Conv2d(200, 175, kernel_size=3)
-        self.conv4 = nn.Conv2d(175, 150, kernel_size=5)
-        self.max_pool1 = nn.MaxPool2d(kernel_size=2)
-        self.fc1 = nn.Linear(out_dim*out_dim*150,150)
-        self.fc2 = nn.Linear(150,out_dim)
-        self.fc3 = nn.Linear(out_dim, n_classes)
+        self.conv1 = nn.Conv2d(1,32,kernel_size=10)
+        self.conv2 = nn.Conv2d(32,64,kernel_size=5)
+        self.conv3 = nn.Conv2d(64,128,kernel_size=3)
+        self.max_pool1 = nn.MaxPool2d(3)
+
+        self.fc1 = nn.Linear(15488 ,512)
+        self.fc2 = nn.Linear(512, 128)
+        self.fc3 = nn.Linear(128,n_classes)
         self.to(self.device)
  
     def calc_out_dim(self, in_dim, kernel_size, stride=1, padding=0):
@@ -36,8 +36,6 @@ class Network(nn.Module):
         feature_map = self.conv2(feature_map)
         feature_map = F.relu(feature_map)
         feature_map = self.conv3(feature_map)
-        feature_map = F.relu(feature_map)
-        feature_map = self.conv4(feature_map)
         feature_map = F.relu(feature_map)
         feature_map = self.max_pool1(feature_map)
 

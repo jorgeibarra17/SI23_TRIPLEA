@@ -32,13 +32,13 @@ def predict(img_title_paths):
         # np.ndarray, torch.Tensor
         im_file = (file_path / path).as_posix()
         original, transformed, denormalized = load_img(im_file)
-        
+        transformed = transformed.unsqueeze(0)
         transformed = transformed.cuda()
         # Inferencia
         # TODO: Para la imagen de entrada, utiliza tu modelo para predecir la clase mas probable
         pred_label = modelo(transformed)
-        pred_label = torch.argmax(pred_label, dim=7)
-
+        pred_label = torch.argmax(pred_label, dim=-1)
+        pred_label = EMOTIONS_MAP[pred_label.item()]
         # Original / transformada
         # pred_label (str): nombre de la clase predicha
         h, w = original.shape[:2]
