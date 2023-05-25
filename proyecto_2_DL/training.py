@@ -41,7 +41,7 @@ def validation_step(val_loader, net, cost_function):
 
 def train():
     # Hyperparametros
-    learning_rate = 1e-6
+    learning_rate = 1e-5
     n_epochs=50
     batch_size = 256
 
@@ -65,7 +65,7 @@ def train():
     criterion = nn.CrossEntropyLoss()
 
     # Define el optimizador
-    optimizer = optim.Adam(modelo.parameters(),lr=learning_rate)
+    optimizer = optim.AdamW(modelo.parameters(),lr=learning_rate)
     running_loss = []
     best_epoch_loss = np.inf
     for epoch in range(n_epochs):

@@ -14,14 +14,16 @@ class Network(nn.Module):
         # TODO: Calcular dimension de salida
         out_dim = self.calc_out_dim(input_dim, kernel_size=3)
         # TODO: Define las capas de tu red
-        self.conv1 = nn.Conv2d(1,32,kernel_size=10)
-        self.conv2 = nn.Conv2d(32,64,kernel_size=5)
-        self.conv3 = nn.Conv2d(64,128,kernel_size=3)
-        self.max_pool1 = nn.MaxPool2d(3)
+        self.conv1 = nn.Conv2d(1,64,kernel_size=2)
+        self.max_pool1 = nn.MaxPool2d(2,stride=2)
+        self.conv2 = nn.Conv2d(64, 128, kernel_size=2)
+        self.max_pool2 = nn.MaxPool2d(2,stride=2)
+        self.conv3 = nn.Conv2d(128,512,kernel_size=3)
+        self.max_pool3 = nn.MaxPool2d(2,stride=2)
 
-        self.fc1 = nn.Linear(15488 ,512)
-        self.fc2 = nn.Linear(512, 128)
-        self.fc3 = nn.Linear(128,n_classes)
+        self.fc1 = nn.Linear(8192, 128)
+        self.fc2 = nn.Linear(128, 32)
+        self.fc3 = nn.Linear(32, n_classes)
         self.to(self.device)
  
     def calc_out_dim(self, in_dim, kernel_size, stride=1, padding=0):
@@ -32,12 +34,11 @@ class Network(nn.Module):
     def forward(self, x: torch.Tensor) -> torch.Tensor:
         # TODO: Define la propagacion hacia adelante de tu red
         feature_map = self.conv1(x)
-        feature_map = F.relu(feature_map)
-        feature_map = self.conv2(feature_map)
-        feature_map = F.relu(feature_map)
-        feature_map = self.conv3(feature_map)
-        feature_map = F.relu(feature_map)
         feature_map = self.max_pool1(feature_map)
+        feature_map = self.conv2(feature_map)
+        feature_map = self.max_pool2(feature_map)
+        feature_map = self.conv3(feature_map)
+        feature_map = self.max_pool3(feature_map)
 
         features = torch.flatten(feature_map,start_dim=1)
         features = self.fc1(features)
@@ -45,6 +46,7 @@ class Network(nn.Module):
         features = self.fc2(features)
         features = F.relu(features)
         logits = self.fc3(features)
+        
         proba = F.softmax(logits,dim = -1)
         return logits
 
