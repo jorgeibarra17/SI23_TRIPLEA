@@ -1,5 +1,5 @@
 from pathlib import Path
-
+import torch
 from torch.utils.data import DataLoader, random_split
 from torchvision import transforms
 from torchvision.datasets import ImageFolder
@@ -7,7 +7,7 @@ from torchvision.utils import make_grid
 import matplotlib.pyplot as plt
 
 
-def get_dataloaders():
+def get_dataloaders(batch_size):
     """Returns train and validation dataloaders for the traffic sign recognition dataset"""
     file_path = Path(__file__).parent.absolute()
     root_path = file_path / "data/crop_dataset/crop_dataset/"
@@ -20,10 +20,10 @@ def get_dataloaders():
 
     # https://pytorch.org/docs/stable/data.html#torch.utils.data.DataLoader
     train_dataloader = DataLoader(train_dataset,
-                                  batch_size=64,
+                                  batch_size=batch_size,
                                   shuffle=True)
     val_dataloader = DataLoader(val_dataset,
-                                batch_size=64,
+                                batch_size=batch_size,
                                 shuffle=False)
     return train_dataloader, val_dataloader
 
@@ -38,12 +38,12 @@ def get_transform():
 
 
 def visualize_data():
-    train_dataloader, val_dataloader = get_dataloaders()
+    train_dataloader, val_dataloader = get_dataloaders(batch_size=64)
 
     # Visualize some training images
-    plt.figure(figsize=(8, 8))
     for data, target in train_dataloader:
         img_grid = make_grid(data)
+        plt.figure(figsize=(8, 8))
         plt.axis("off")
         plt.imshow(img_grid.permute(1, 2, 0))
         plt.show()
@@ -52,8 +52,8 @@ def visualize_data():
         break
 
     # Visualize some validation images with labels
-    plt.figure(figsize=(8, 8))
     for data, target in val_dataloader:
+        plt.figure(figsize=(8, 8))
         for i in range(16):
             plt.subplot(4, 4, i + 1)
             plt.axis("off")
