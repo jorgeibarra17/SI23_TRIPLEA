@@ -11,8 +11,7 @@ from pathlib import Path
 def eval(val_loader, net, cost_function):
     val_loss = []
     for i, batch in enumerate(val_loader, 0):
-        batch_imgs = batch['transformed']
-        batch_labels = batch['label']
+        batch_imgs, batch_labels = batch
         device = net.device
         batch_imgs = batch_imgs.to(device)
         batch_labels = batch_labels.to(device)
@@ -32,7 +31,7 @@ def train():
     train_dataloader, val_dataloader = get_dataloaders(batch_size)
     
     # Crea la instancia de tu modelo y mueve los parámetros a la GPU (si está disponible)
-    model = Network(input_dim=32, num_classes=42)
+    model = Network(input_dim=32, num_classes=43)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
 
@@ -70,15 +69,14 @@ def train():
         val_loss = eval(val_dataloader, model, criterion)
 
         # Muestra las pérdidas
-        tqdm.write(f"Epoch {epoch+1}/{num_epochs} - Train Loss: {train_loss:.4f} - Val Loss: {val_loss:.4f}")
+        tqdm.write(f"Epoch {epoch} - Train Loss: {train_loss:.4f} - Val Loss: {val_loss:.4f}")
 
        # TODO guarda el modelo si el costo de validación es menor al mejor costo de validación
         if val_loss < best_epoch_loss :
             PATH = "modelo_PF.pt"
             torch.save(model.state_dict(), PATH)
-            tqdm.write(f"Modelo guardado en {save_path}")
         plotter.on_epoch_end(epoch, train_loss, val_loss)
-    plotter.on_train_end()
+    #plotter.on_train_end()
 
 if __name__ == "__main__":
     train()
