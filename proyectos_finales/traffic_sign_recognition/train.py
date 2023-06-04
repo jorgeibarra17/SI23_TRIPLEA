@@ -24,14 +24,14 @@ def eval(val_loader, net, cost_function):
 def train():
     # Hyperparámetros
     learning_rate = 1e-5
-    num_epochs = 50
-    batch_size = 64
+    num_epochs = 100
+    batch_size = 128
 
     # Obtén los dataloaders de entrenamiento y validación
     train_dataloader, val_dataloader = get_dataloaders(batch_size)
     
     # Crea la instancia de tu modelo y mueve los parámetros a la GPU (si está disponible)
-    model = Network(input_dim=32, num_classes=43)
+    model = Network(num_classes=43)
     device = torch.device("cuda" if torch.cuda.is_available() else "cpu")
     model.to(device)
 

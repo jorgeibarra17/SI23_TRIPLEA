@@ -5,7 +5,7 @@ import torch
 from pathlib import Path
 import numpy as np
 import pandas as pd
-from dataset import get_transform, Signal_map
+from dataset import get_transform, Signal_map, get_dataloaders
 file_path = Path(__file__).parent.absolute()
 
 def to_numpy(tensor: torch.tensor, roll_dims = True):
@@ -87,7 +87,10 @@ def predict(img_title_paths):
         cv2.imshow("Prediccion", img)
         cv2.waitKey(0)
 
-
 if __name__ == "__main__":
     img_path = ["./data/crop_dataset/crop_dataset/00000/00000_00000.jpg"]
+    predict(img_path)
+    img_path = ["./data/crop_dataset/crop_dataset/00021/00000_00002.jpg"]
+    predict(img_path)
+    img_path = ["./data/crop_dataset/crop_dataset/00040/00000_00004.jpg"]
     predict(img_path)
